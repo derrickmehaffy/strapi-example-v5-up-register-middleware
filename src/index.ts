@@ -7,7 +7,19 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register(/* { strapi }: { strapi: Core.Strapi } */) {
+    const middleware = "global::generateUsername";
+    const routesPath =
+      strapi.plugins["users-permissions"].routes["content-api"].routes;
+
+    const registerIndex = routesPath.findIndex(
+      (route) => route.path === "/auth/local/register"
+    );
+
+    const registerRoute = routesPath[registerIndex];
+
+    registerRoute.config.middlewares.push(middleware);
+  },
 
   /**
    * An asynchronous bootstrap function that runs before
